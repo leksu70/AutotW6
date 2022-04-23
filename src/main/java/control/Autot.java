@@ -15,7 +15,7 @@ import org.json.JSONObject;
 import model.Auto;
 import model.dao.Dao;
 
-@WebServlet("/autot")  // Endpoint
+@WebServlet("/autot/*")  // Endpoint ja lis‰ksi kansiot mukaan t‰hdell‰
 public class Autot extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -28,9 +28,14 @@ public class Autot extends HttpServlet {
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
 		System.out.println("Autot.doGet()");
 		
+		// Haetaan kutsun polkutiedot, esim. /autot/audi
+		String pathInfo = request.getPathInfo();
+		System.out.println("polku: " + pathInfo);
+		String hakusana = pathInfo.replace("/", "");
+		
 		// Daon m‰‰ritykset
 		Dao dao = new Dao();
-		ArrayList<Auto> autot = dao.listaaKaikki();
+		ArrayList<Auto> autot = dao.listaaKaikki(hakusana);
 		System.out.println(autot);
 		
 		// Muutetaan JSONiksi

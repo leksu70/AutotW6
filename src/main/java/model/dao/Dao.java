@@ -57,4 +57,35 @@ public class Dao {
 		}		
 		return autot;
 	}
+	
+	public ArrayList<Auto> listaaKaikki(String hakusana){
+		ArrayList<Auto> autot = new ArrayList<Auto>();
+		sql = "SELECT * FROM autot WHERE rekno LIKE ? OR merkki LIKE ? OR malli LIKE ?";       
+		try {
+			con=yhdista();
+			if(con!=null){ //jos yhteys onnistui
+				stmtPrep = con.prepareStatement(sql);
+				stmtPrep.setString(1, "%" + hakusana + "%");
+				stmtPrep.setString(2, "%" + hakusana + "%");
+				stmtPrep.setString(3, "%" + hakusana + "%");
+				
+        		rs = stmtPrep.executeQuery();   
+				if(rs!=null){ //jos kysely onnistui
+					//con.close();					
+					while(rs.next()){
+						Auto auto = new Auto();
+						auto.setRekno(rs.getString(1));
+						auto.setMerkki(rs.getString(2));
+						auto.setMalli(rs.getString(3));	
+						auto.setVuosi(rs.getInt(4));	
+						autot.add(auto);
+					}					
+				}				
+			}	
+			con.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+		return autot;
+	}
 }
