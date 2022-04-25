@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import model.Auto;
 
@@ -33,6 +34,7 @@ public class Dao {
 	
 	public ArrayList<Auto> listaaKaikki(){
 		ArrayList<Auto> autot = new ArrayList<Auto>();
+		System.out.println("Dao.listaaKaikki()");
 		sql = "SELECT * FROM autot";       
 		try {
 			con=yhdista();
@@ -60,6 +62,7 @@ public class Dao {
 	
 	public ArrayList<Auto> listaaKaikki(String hakusana){
 		ArrayList<Auto> autot = new ArrayList<Auto>();
+		System.out.println("Dao.listaaKaikki(\"" + hakusana + "\")");
 		sql = "SELECT * FROM autot WHERE rekno LIKE ? OR merkki LIKE ? OR malli LIKE ?";       
 		try {
 			con=yhdista();
@@ -87,5 +90,42 @@ public class Dao {
 			e.printStackTrace();
 		}		
 		return autot;
+	}
+	
+	public boolean lisaaAuto(Auto auto) {
+		boolean paluuArvo = true;
+		System.out.println("Dao.lisaaAuto()");
+		sql="INSERT INTO autot VALUES(?,?,?,?)";
+		try {
+			con = yhdista();
+			stmtPrep=con.prepareStatement(sql);
+			stmtPrep.setString(1, auto.getRekno());
+			stmtPrep.setString(2, auto.getMerkki());
+			stmtPrep.setString(3, auto.getMalli());
+			stmtPrep.setInt(4, auto.getVuosi());
+			stmtPrep.executeUpdate();
+			con.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			paluuArvo = false;
+		}
+		return paluuArvo;
+	}
+	
+	public boolean poistaAuto(String rekNo) { 
+		// Oikeassa el‰m‰ss‰ tiedot ensisijaisesti merkit‰‰n poistetuksi
+		boolean paluuArvo = true;
+		sql="DELETE FROM autot WHERE rekNo=?";
+		try {
+			con = yhdista();
+			stmtPrep=con.prepareStatement(sql);
+			stmtPrep.setString(1, rekNo);
+			stmtPrep.executeUpdate();
+			con.close();
+		} catch (SQLException e) { // Oli esimerkiss‰ Exception.
+			e.printStackTrace();
+			paluuArvo = false;
+		}
+		return paluuArvo;
 	}
 }

@@ -31,7 +31,10 @@ public class Autot extends HttpServlet {
 		// Haetaan kutsun polkutiedot, esim. /autot/audi
 		String pathInfo = request.getPathInfo();
 		System.out.println("polku: " + pathInfo);
-		String hakusana = pathInfo.replace("/", "");
+		String hakusana = "";
+		if (pathInfo != null) {
+			hakusana = pathInfo.replace("/", "");
+		}
 		
 		// Daon m‰‰ritykset
 		Dao dao = new Dao();
@@ -43,11 +46,28 @@ public class Autot extends HttpServlet {
 		response.setContentType("application/json");
 		PrintWriter out = response.getWriter();
 		out.println(strJSON);
-		
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Autot.doPost()");
+		// Muutetaan kutsun mukana tuleva json-string json-objektiksi:
+		JSONObject jsonObj = new JsonStrToObj().convert(request);
+		Auto auto = new Auto();
+		auto.setRekno(jsonObj.getString("rekNo"));
+		auto.setMerkki(jsonObj.getString("merkki"));
+		auto.setMalli(jsonObj.getString("malli"));
+		auto.setVuosi(jsonObj.getInt("vuosi"));
+		System.out.println(auto);
+		response.setContentType("application/json");
+		PrintWriter out = response.getWriter();
+		
+		Dao dao = new Dao();
+		if (dao.lisaaAuto(auto)) { // Metodi palauttaa true/false
+			out.println("{\"response\":1}"); // Lis‰‰minen onnistui {"response":1}
+		} else {
+			out.println("{\"response\":0}"); // Lis‰‰minen ep‰onnistui {"response":0}
+		}
+		
 	}
 
 	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -56,6 +76,18 @@ public class Autot extends HttpServlet {
 
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Autot.doDelete()");
+		String pathInfo = request.getPathInfo();  // Haetaan kutsun polkutiedot, esim. /ABC-123
+		System.out.println("polku: " + pathInfo);
+		String poistettavaRekno = pathInfo.replace("/", "");
+
+		response.setContentType("application/json");
+		PrintWriter out = response.getWriter();
+		Dao dao = new Dao();
+		if (dao.poistaAuto(poistettavaRekno)) { // Metodi palauttaa true/false
+			out.println("{\"response\":1}"); // Poistaminen onnistui {"response":1}
+		} else {
+			out.println("{\"response\":0}"); // Poistaminen ep‰onnistui {"response":0}
+		}
 	}
 
 }
