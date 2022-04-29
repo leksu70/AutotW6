@@ -111,7 +111,10 @@ function lisaaTiedot(){
 				$("#ilmo").html("Auton lis‰‰minen ep‰onnistui.");
 			} else if (result.response == 1) {
 				$("#ilmo").html("Auton lis‰‰minen onnistui.");
-				$("#rekNo", "#merkki", "#malli", "#vuosi").val("");
+				$("#rekNo").val(""); // , "#", "#", "#"
+				$("#merkki").val("");
+				$("#malli").val("");
+				$("#vuosi").val("");
 			}
 		}
 	});
