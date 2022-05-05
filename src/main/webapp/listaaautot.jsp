@@ -55,12 +55,13 @@ function haeAutot(){
 		success:function(result){//Funktio palauttaa tiedot json-objektina		
 			$.each(result.autot, function(i, field){  
         		var htmlStr;
-    	    	htmlStr += "<tr id='rivi_"+field.rekno+"'>";
-    	    	htmlStr += "<td>"+field.rekno+"</td>";
-        		htmlStr += "<td>"+field.merkki+"</td>";
-        		htmlStr += "<td>"+field.malli+"</td>";
-    	    	htmlStr += "<td>"+field.vuosi+"</td>";
-        		htmlStr += "<td><span class='poista' onclick=poista('"+field.rekno+"')>Poista</span></td>";
+    	    	htmlStr += "<tr id='rivi_" + field.rekno + "'>";
+    	    	htmlStr += "<td>" + field.rekno + "</td>";
+        		htmlStr += "<td>" + field.merkki + "</td>";
+        		htmlStr += "<td>" + field.malli + "</td>";
+    	    	htmlStr += "<td>" + field.vuosi + "</td>";
+    	    	htmlStr += "<td><a href='muutaauto.jsp?rekno=" + field.rekno + "'>Muuta</a>&nbsp;";
+        		htmlStr += "<span class='poista' onclick=poista('" + field.rekno + "')>Poista</span></td>";
         		htmlStr += "</tr>";
         		$("#listaus tbody").append(htmlStr);
         });	
